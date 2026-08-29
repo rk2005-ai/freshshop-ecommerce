@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Secure Checkout - Perishable Shop</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        .delivery-mode-option {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+        }
+        .delivery-mode-option.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold" href="index.html"><i class="fas fa-shopping-basket text-warning mr-2"></i>Perishable Shop</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="font-weight-bold mb-1"><i class="fas fa-shield-alt text-success mr-2"></i>Secure Checkout</h2>
+                <p class="text-muted mb-0">Choose your delivery slot, payment method, and confirm order</p>
+            </div>
+            <a href="cart.html" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-1"></i> Back to Cart</a>
+        </div>
+
+        <div class="row">
+            <!-- Left: Delivery & Payment Details -->
+            <div class="col-lg-8 mb-4">
+                <div class="card checkout-card p-4 mb-4">
+                    <h5 class="font-weight-bold mb-3"><i class="fas fa-truck text-primary mr-2"></i>1. Delivery Preferences</h5>
+                    
+                    <!-- Delivery Mode Selection -->
+                    <label class="font-weight-bold small text-muted">Delivery Mode</label>
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-2">
+                            <div class="delivery-mode-option active" id="optDoorstep" onclick="selectDeliveryMode('DOORSTEP')">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="modeDoorstep" name="deliveryMode" class="custom-control-input" checked>
+                                    <label class="custom-control-label font-weight-bold" for="modeDoorstep">
+                                        🚪 Doorstep Delivery
+                                    </label>
+                                </div>
+                                <small class="text-muted d-block mt-1">Delivered directly to your home address.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="delivery-mode-option" id="optPickup" onclick="selectDeliveryMode('STORE_PICKUP')">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="modePickup" name="deliveryMode" class="custom-control-input">
+                                    <label class="custom-control-label font-weight-bold" for="modePickup">
+                                        🏪 Store Pickup (Click & Collect)
+                                    </label>
+                                </div>
+                                <small class="text-muted d-block mt-1">Ready in 30 mins at Central Fresh Store.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Slot -->
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold small text-muted">Preferred Delivery Time Slot *</label>
+                        <select class="form-control" id="deliverySlot">
+                            <option value="Morning (8:00 AM - 11:00 AM)">🌅 Morning (8:00 AM - 11:00 AM)</option>
+                            <option value="Afternoon (1:00 PM - 4:00 PM)">☀️ Afternoon (1:00 PM - 4:00 PM)</option>
+                            <option value="Evening (6:00 PM - 9:00 PM)">🌙 Evening (6:00 PM - 9:00 PM)</option>
+                        </select>
+                    </div>
+
+                    <!-- Address & Contact -->
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="font-weight-bold small text-muted">Full Name *</label>
+                            <input type="text" class="form-control" id="customerName" value="Lisa Simpson" required>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="font-weight-bold small text-muted">Phone Number *</label>
+                            <input type="tel" class="form-control" id="customerPhone" value="+1 (555) 234-5678" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold small text-muted">Delivery Address *</label>
+                        <textarea class="form-control" id="customerAddress" rows="2" required>742 Evergreen Terrace, Springfield</textarea>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold small text-muted">Special Courier Drop-off Instructions</label>
+                        <input type="text" class="form-control" id="deliveryNotes" placeholder="e.g. Leave at front porch or ring doorbell twice">
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="card checkout-card p-4">
+                    <h5 class="font-weight-bold mb-3"><i class="fas fa-credit-card text-success mr-2"></i>2. Payment Method</h5>
+                    
+                    <div class="custom-control custom-radio mb-3">
+                        <input type="radio" id="payWallet" name="paymentMethod" class="custom-control-input" checked>
+                        <label class="custom-control-label font-weight-bold" for="payWallet">
+                            💳 Digital Wallet (Balance: $<span class="wallet-balance-val">150.00</span>)
+                        </label>
+                        <small class="text-muted d-block">Instant 1-click contactless payment with automated cashback.</small>
+                    </div>
+
+                    <div class="custom-control custom-radio mb-3">
+                        <input type="radio" id="payCard" name="paymentMethod" class="custom-control-input">
+                        <label class="custom-control-label font-weight-bold" for="payCard">
+                            💳 Credit / Debit Card (Visa, Mastercard, Amex)
+                        </label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="payCOD" name="paymentMethod" class="custom-control-input">
+                        <label class="custom-control-label font-weight-bold" for="payCOD">
+                            💵 Cash on Delivery (COD)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Order Review -->
+            <div class="col-lg-4">
+                <div class="card checkout-card p-4">
+                    <h5 class="font-weight-bold mb-3">Order Summary</h5>
+                    <div id="checkoutItemsList" class="mb-3 border-bottom pb-2">
+                        <!-- Items populated via JS -->
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal:</span>
+                        <span class="font-weight-bold" id="chkSubtotal">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 text-success" id="chkDiscountRow" style="display:none;">
+                        <span>Discount:</span>
+                        <span class="font-weight-bold" id="chkDiscount">-$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Delivery Fee:</span>
+                        <span class="text-success font-weight-bold">FREE</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0 font-weight-bold">Total to Pay:</h5>
+                        <h3 class="mb-0 font-weight-bold text-primary" id="chkTotal">$0.00</h3>
+                    </div>
+
+                    <button class="btn btn-success btn-lg btn-block font-weight-bold py-3 shadow" onclick="placeOrder()">
+                        <i class="fas fa-lock mr-2"></i> Place Order Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        let selectedDeliveryMode = 'DOORSTEP';
+
+        function selectDeliveryMode(mode) {
+            selectedDeliveryMode = mode;
+            document.getElementById('optDoorstep').classList.toggle('active', mode === 'DOORSTEP');
+            document.getElementById('optPickup').classList.toggle('active', mode === 'STORE_PICKUP');
+            document.getElementById('modeDoorstep').checked = (mode === 'DOORSTEP');
+            document.getElementById('modePickup').checked = (mode === 'STORE_PICKUP');
+        }
+
+        function renderCheckoutSummary() {
+            const cart = getCart();
+            const listEl = document.getElementById('checkoutItemsList');
+            const urlParams = new URLSearchParams(window.location.search);
+            const discountPct = parseFloat(urlParams.get('discount') || '0');
+
+            if (cart.length === 0) {
+                window.location.href = 'products.html';
+                return;
+            }
+
+            let html = '';
+            cart.forEach(item => {
+                html += `
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <div>
+                        <strong class="small d-block">${item.product.name}</strong>
+                        <small class="text-muted">${item.quantity}x @ $${item.product.price}</small>
+                    </div>
+                    <span class="font-weight-bold small text-dark">$${item.subtotal.toFixed(2)}</span>
+                </div>`;
+            });
+            listEl.innerHTML = html;
+
+            const subtotal = getCartSubtotal();
+            const discountAmt = subtotal * discountPct;
+            const finalTotal = Math.max(0, subtotal - discountAmt);
+
+            document.getElementById('chkSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+            if (discountPct > 0) {
+                document.getElementById('chkDiscountRow').style.display = 'flex';
+                document.getElementById('chkDiscount').innerText = `-$${discountAmt.toFixed(2)}`;
+            }
+            document.getElementById('chkTotal').innerText = `$${finalTotal.toFixed(2)}`;
+        }
+
+        function placeOrder() {
+            const cart = getCart();
+            if (cart.length === 0) return;
+
+            const subtotal = getCartSubtotal();
+            const urlParams = new URLSearchParams(window.location.search);
+            const discountPct = parseFloat(urlParams.get('discount') || '0');
+            const total = Math.max(0, subtotal - (subtotal * discountPct));
+
+            const isWallet = document.getElementById('payWallet').checked;
+            if (isWallet) {
+                const bal = getWalletBalance();
+                if (bal < total) {
+                    alert(`Insufficient digital wallet balance ($${bal.toFixed(2)}). Please top up in your Wallet page or choose Cash on Delivery.`);
+                    return;
+                }
+                setWalletBalance(bal - total);
+            }
+
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const newOrder = {
+                id: Math.floor(100 + Math.random() * 900),
+                date: new Date().toISOString().split('T')[0],
+                items: cart,
+                totalAmount: total,
+                status: 'PROCESSING',
+                deliveryType: selectedDeliveryMode,
+                deliverySlot: document.getElementById('deliverySlot').value,
+                customerName: document.getElementById('customerName').value,
+                phone: document.getElementById('customerPhone').value,
+                shippingAddress: document.getElementById('customerAddress').value,
+                deliveryNotes: document.getElementById('deliveryNotes').value,
+                returnStatus: 'NONE'
+            };
+
+            orders.unshift(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            clearCart();
+
+            alert(`🎉 Order #${newOrder.id} Placed Successfully!\n\nDelivery Mode: ${newOrder.deliveryType}\nTime Slot: ${newOrder.deliverySlot}`);
+            window.location.href = `track.html?orderId=${newOrder.id}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCheckoutSummary);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Perishable Shop - Fresh Grocery & Produce</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081986.png">
+
+    <!-- Bootstrap 4 & FontAwesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Modern Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold d-flex align-items-center" href="index.html">
+                <i class="fas fa-shopping-basket text-warning mr-2"></i>Perishable Shop
+                <span class="brand-badge">PWA</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><a class="nav-link font-weight-bold" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">All Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bulk-order.html"><i class="fas fa-table text-warning mr-1"></i> Bulk Order</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin.html"><i class="fas fa-chart-line text-info mr-1"></i> Admin</a></li>
+                </ul>
+
+                <!-- Search with Voice Mic -->
+                <form class="form-inline my-2 my-lg-0 mr-3" onsubmit="event.preventDefault(); window.location.href='products.html?search=' + document.getElementById('navSearch').value;">
+                    <div class="input-group">
+                        <input class="form-control" type="search" id="navSearch" placeholder="Search fresh produce..." aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-light" type="button" onclick="startVoiceSearch('#navSearch')" title="Search by Voice">
+                                <i class="fas fa-microphone text-warning"></i>
+                            </button>
+                            <button class="btn btn-warning" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+
+                <ul class="navbar-nav align-items-center">
+                    <!-- Theme Switcher -->
+                    <li class="nav-item mr-2">
+                        <button class="btn theme-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                            <i class="theme-toggle-icon fas fa-moon"></i>
+                        </button>
+                    </li>
+                    <!-- Digital Wallet -->
+                    <li class="nav-item mr-2">
+                        <a class="btn btn-outline-info btn-sm font-weight-bold" href="wallet.html">
+                            <i class="fas fa-wallet mr-1"></i> <span class="wallet-balance-val">$150.00</span>
+                        </a>
+                    </li>
+                    <!-- Wishlist -->
+                    <li class="nav-item mr-2">
+                        <a class="btn btn-outline-danger btn-sm position-relative" href="products.html?view=wishlist" title="Wishlist">
+                            <i class="fas fa-heart"></i>
+                            <span class="badge badge-danger wishlist-badge-count" style="display:none;">0</span>
+                        </a>
+                    </li>
+                    <!-- Mini Cart Trigger -->
+                    <li class="nav-item mr-2">
+                        <button class="btn btn-outline-light btn-sm font-weight-bold position-relative" onclick="toggleMiniCart()">
+                            <i class="fas fa-shopping-cart mr-1"></i> Cart
+                            <span class="badge badge-warning text-dark cart-badge-count" style="display:none;">0</span>
+                        </button>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="orders.html"><i class="fas fa-box mr-1"></i> Orders</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        
+        <!-- Hero Box -->
+        <div class="hero-box">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 font-weight-bold mb-2">Fresh & Organic Groceries</h1>
+                    <p class="lead mb-4 text-white-50">Hand-picked fruits, crisp vegetables, and dairy delivered directly to your doorstep with guaranteed freshness.</p>
+                    <a href="products.html" class="btn btn-warning btn-lg font-weight-bold px-4 shadow mr-2">
+                        <i class="fas fa-shopping-bag mr-2"></i> Shop All Items
+                    </a>
+                    <a href="bulk-order.html" class="btn btn-outline-light btn-lg font-weight-bold px-3 shadow">
+                        <i class="fas fa-boxes mr-2 text-warning"></i> Wholesale Bulk Order
+                    </a>
+                </div>
+                <div class="col-md-4 text-center d-none d-md-block">
+                    <i class="fas fa-carrot fa-6x text-warning"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Filter Pills -->
+        <div class="mb-4 text-center" id="categoryPills">
+            <span class="category-pill active" onclick="filterHomeCategory('All')">All Categories</span>
+            <span class="category-pill" onclick="filterHomeCategory('Fruits')">🍎 Fruits</span>
+            <span class="category-pill" onclick="filterHomeCategory('Vegetables')">🥕 Vegetables</span>
+            <span class="category-pill" onclick="filterHomeCategory('Dairy')">🥛 Dairy</span>
+            <span class="category-pill" onclick="filterHomeCategory('Bakery')">🍞 Bakery</span>
+        </div>
+
+        <!-- Section Title -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="font-weight-bold mb-0">Featured Produce</h3>
+            <div>
+                <a href="bulk-order.html" class="btn btn-outline-info btn-sm mr-2"><i class="fas fa-table mr-1"></i> Bulk Sheet</a>
+                <a href="products.html" class="btn btn-outline-primary btn-sm">View All (<span id="totalProdCount">8</span>) <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+        </div>
+
+        <!-- Featured Products Grid -->
+        <div class="row" id="homeProductGrid">
+            <!-- Populated via JavaScript -->
+        </div>
+
+    </div>
+
+    <!-- Floating Comparison Tray -->
+    <div class="compare-dock" id="compareDock">
+        <div>
+            <i class="fas fa-balance-scale text-warning mr-2"></i>
+            <strong><span id="compareCount">0</span> Item(s) Selected for Comparison</strong>
+        </div>
+        <div>
+            <a href="compare.html" class="btn btn-warning btn-sm font-weight-bold px-3 mr-2">Compare Now</a>
+            <button class="btn btn-sm btn-outline-light" onclick="localStorage.setItem('compareList', '[]'); renderCompareDock();">&times;</button>
+        </div>
+    </div>
+
+    <!-- Slide-over Mini Cart Drawer -->
+    <div class="mini-cart-backdrop" id="miniCartBackdrop" onclick="toggleMiniCart()"></div>
+    <div class="mini-cart-drawer" id="miniCartDrawer">
+        <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="font-weight-bold mb-0"><i class="fas fa-shopping-cart text-primary mr-2"></i>Shopping Cart</h5>
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleMiniCart()">&times;</button>
+        </div>
+        <div class="p-4 flex-grow-1" id="miniCartItems" style="overflow-y: auto;">
+            <!-- Cart items render here -->
+        </div>
+        <div class="p-4 border-top" style="background: var(--bg-secondary);">
+            <div class="d-flex justify-content-between mb-3">
+                <span class="font-weight-bold">Subtotal:</span>
+                <h4 class="font-weight-bold text-primary mb-0" id="miniCartTotal">$0</h4>
+            </div>
+            <a href="checkout.html" class="btn btn-success btn-block btn-lg font-weight-bold mb-2">
+                <i class="fas fa-lock mr-2"></i> Proceed to Checkout
+            </a>
+            <a href="cart.html" class="btn btn-outline-primary btn-block">View Full Cart</a>
+        </div>
+    </div>
+
+    <!-- PWA Install Prompt Banner (Mobile Only) -->
+    <div class="pwa-install-banner" id="pwaInstallBanner">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-mobile-alt fa-2x text-warning mr-3"></i>
+            <div>
+                <strong class="d-block">Install FreshShop App</strong>
+                <small class="text-white-50">1-tap home screen grocery shopping</small>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-warning font-weight-bold mr-1" onclick="installPWA()">Install</button>
+            <button class="btn btn-sm btn-outline-light" onclick="document.getElementById('pwaInstallBanner').style.display='none'">&times;</button>
+        </div>
+    </div>
+
+    <!-- Native Mobile App Bottom Tab Bar (Mobile Only) -->
+    <div class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-tab-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="products.html" class="mobile-tab-item">
+            <i class="fas fa-th-large"></i>
+            <span>Browse</span>
+        </a>
+        <a href="javascript:void(0)" class="mobile-tab-item" onclick="toggleMiniCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cart</span>
+            <span class="mobile-tab-badge cart-badge-count" style="display:none;">0</span>
+        </a>
+        <a href="orders.html" class="mobile-tab-item">
+            <i class="fas fa-box"></i>
+            <span>Orders</span>
+        </a>
+        <a href="wallet.html" class="mobile-tab-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5 d-none d-md-block">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 Perishable Shop. Fresh produce guaranteed. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        let currentHomeCat = 'All';
+
+        function filterHomeCategory(cat) {
+            currentHomeCat = cat;
+            document.querySelectorAll('#categoryPills .category-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.innerText.includes(cat) || (cat === 'All' && pill.innerText === 'All Categories'));
+            });
+            renderHomeProducts();
+        }
+
+        function renderHomeProducts() {
+            const products = getProducts();
+            const grid = document.getElementById('homeProductGrid');
+            const filtered = currentHomeCat === 'All' ? products : products.filter(p => p.category === currentHomeCat);
+            
+            document.getElementById('totalProdCount').innerText = products.length;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center py-5 text-muted"><h4>No produce found in this category.</h4></div>';
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(p => {
+                html += `
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card product-card h-100">
+                        <div class="product-img-wrap">
+                            <span class="badge ${p.stock > 10 ? 'badge-success' : 'badge-warning'} badge-stock">
+                                ${p.stock > 10 ? 'In Stock' : 'Low: ' + p.stock + ' left'}
+                            </span>
+                            <button class="wish-btn" onclick="toggleWishlist(${p.id})">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <img src="${p.image}" alt="${p.name}">
+                        </div>
+                        <div class="card-body p-3 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted text-uppercase font-weight-bold">${p.category}</small>
+                                <button class="btn btn-xs btn-outline-primary py-0 px-2 small" onclick="toggleCompare(${p.id}, '${p.name}')">
+                                    <i class="fas fa-balance-scale mr-1"></i> Compare
+                                </button>
+                            </div>
+                            <h6 class="card-title font-weight-bold mb-1">${p.name}</h6>
+                            <p class="text-muted small text-truncate mb-2">${p.description}</p>
+                            <div class="mt-auto pt-2 border-top d-flex align-items-center justify-content-between">
+                                <h5 class="text-primary font-weight-bold mb-0">$${p.price}</h5>
+                                <button class="btn btn-warning btn-sm font-weight-bold" onclick="addToCart(${p.id}, 1)">
+                                    <i class="fas fa-cart-plus mr-1"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            grid.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderHomeProducts);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

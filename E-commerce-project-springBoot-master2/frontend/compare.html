@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Product Comparison - Perishable Shop</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .compare-img {
+            max-height: 140px;
+            object-fit: contain;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .compare-table th {
+            background: var(--bg-secondary);
+            width: 25%;
+        }
+        .compare-table td {
+            text-align: center;
+            width: 25%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold" href="index.html"><i class="fas fa-shopping-basket text-warning mr-2"></i>Perishable Shop</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">All Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bulk-order.html">Bulk Order</a></li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item mr-2"><button class="btn theme-btn" onclick="toggleTheme()"><i class="theme-toggle-icon fas fa-moon"></i></button></li>
+                    <li class="nav-item"><a class="btn btn-outline-light btn-sm" href="cart.html"><i class="fas fa-shopping-cart mr-1"></i> Cart</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="font-weight-bold mb-1"><i class="fas fa-balance-scale text-primary mr-2"></i>Produce Comparison Tool</h2>
+                <p class="text-muted mb-0">Compare price, nutritional freshness, weight, and stock side-by-side</p>
+            </div>
+            <a href="products.html" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-1"></i> Add More Items</a>
+        </div>
+
+        <div class="card p-4 shadow-sm" style="background: var(--bg-card); border-color: var(--border-color);" id="compareContainer">
+            <!-- Injected via JS -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        function renderComparePage() {
+            const list = JSON.parse(localStorage.getItem('compareList') || '[]');
+            const products = getProducts();
+            const container = document.getElementById('compareContainer');
+
+            const items = list.map(id => products.find(p => p.id === id)).filter(Boolean);
+
+            if (items.length === 0) {
+                // Default to first 2 products for nice demo
+                items.push(products[0], products[1]);
+            }
+
+            let html = `
+            <div class="table-responsive">
+                <table class="table table-bordered compare-table">
+                    <tbody>
+                        <tr>
+                            <th>Produce Preview</th>
+                            ${items.map(p => `
+                                <td>
+                                    <img src="${p.image}" alt="${p.name}" class="compare-img mb-2 d-block mx-auto">
+                                    <h6 class="font-weight-bold mb-0">${p.name}</h6>
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            ${items.map(p => `<td><span class="badge badge-light border">${p.category}</span></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            ${items.map(p => `<td><h4 class="text-primary font-weight-bold mb-0">$${p.price}</h4></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Weight / Portion</th>
+                            ${items.map(p => `<td><strong>${p.weight}g</strong></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Freshness Rating</th>
+                            ${items.map(p => `<td><span class="text-warning"><i class="fas fa-star"></i> ${p.rating} / 5.0</span></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Stock Availability</th>
+                            ${items.map(p => `<td><span class="badge badge-success">${p.stock} in stock</span></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Action</th>
+                            ${items.map(p => `
+                                <td>
+                                    <button class="btn btn-warning btn-sm font-weight-bold" onclick="addToCart(${p.id}, 1)">
+                                        <i class="fas fa-cart-plus mr-1"></i> Add to Cart
+                                    </button>
+                                </td>
+                            `).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>`;
+            container.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderComparePage);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

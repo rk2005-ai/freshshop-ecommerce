@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # MySQL Database Service
+  db:
+    image: mysql:8.0
+    container_name: freshshop-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ecommjava
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: shopuser
+      MYSQL_PASSWORD: shoppassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./basedata.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot E-Commerce Application Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freshshop-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/ecommjava?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: shopuser
+      SPRING_DATASOURCE_PASSWORD: shoppassword
+
+volumes:
+  mysql_data:

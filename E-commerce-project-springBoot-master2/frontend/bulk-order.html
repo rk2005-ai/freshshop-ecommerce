@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Wholesale & Bulk Order Sheet - Perishable Shop</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .bulk-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        .matrix-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: var(--bg-secondary);
+        }
+        .qty-input-stepper {
+            width: 70px;
+            text-align: center;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .sticky-bulk-bar {
+            position: sticky;
+            bottom: 0;
+            background: #0f172a;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.25);
+            z-index: 1030;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold d-flex align-items-center" href="index.html">
+                <i class="fas fa-shopping-basket text-warning mr-2"></i>Perishable Shop
+            </a>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">All Products</a></li>
+                    <li class="nav-item active"><a class="nav-link font-weight-bold" href="bulk-order.html"><i class="fas fa-table text-warning mr-1"></i> Bulk Order</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin.html"><i class="fas fa-chart-line text-info mr-1"></i> Admin</a></li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item mr-2">
+                        <button class="btn theme-btn" onclick="toggleTheme()"><i class="theme-toggle-icon fas fa-moon"></i></button>
+                    </li>
+                    <li class="nav-item mr-2">
+                        <a class="btn btn-outline-info btn-sm font-weight-bold" href="wallet.html"><i class="fas fa-wallet mr-1"></i> <span class="wallet-balance-val">$150.00</span></a>
+                    </li>
+                    <li class="nav-item"><a class="btn btn-outline-light btn-sm font-weight-bold" href="cart.html"><i class="fas fa-shopping-cart mr-1"></i> Cart <span class="badge badge-warning text-dark cart-badge-count" style="display:none;">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="font-weight-bold mb-1"><i class="fas fa-boxes text-primary mr-2"></i>Wholesale & Family Bulk Order Matrix</h2>
+                <p class="text-muted mb-0">Order large quantities rapidly with live matrix calculation</p>
+            </div>
+            <a href="products.html" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-1"></i> Back to Catalog</a>
+        </div>
+
+        <div class="card bulk-card mb-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 70px;">Item</th>
+                            <th>Produce Details</th>
+                            <th>Category</th>
+                            <th>Unit Price</th>
+                            <th>Weight</th>
+                            <th style="width: 180px;">Batch Order Qty</th>
+                            <th>Line Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bulkTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sticky Action Bar -->
+        <div class="sticky-bulk-bar">
+            <div>
+                <span class="mr-4"><strong><span id="bulkTotalUnits">0</span></strong> Total Units</span>
+                <span>Estimated Value: <strong class="text-warning h4 mb-0 ml-1">$<span id="bulkGrandTotal">0.00</span></strong></span>
+            </div>
+            <button class="btn btn-success btn-lg font-weight-bold px-4 shadow" onclick="submitBulkOrder()">
+                <i class="fas fa-cart-plus mr-2"></i> Add All to Cart & Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        function renderBulkMatrix() {
+            const products = getProducts();
+            const tbody = document.getElementById('bulkTableBody');
+            let html = '';
+
+            products.forEach(p => {
+                html += `
+                <tr>
+                    <td><img src="${p.image}" alt="${p.name}" class="matrix-img"></td>
+                    <td>
+                        <strong class="d-block">${p.name}</strong>
+                        <small class="text-muted">${p.description.substring(0, 50)}...</small>
+                    </td>
+                    <td><span class="badge badge-light border">${p.category}</span></td>
+                    <td><strong class="text-success">$${p.price}</strong></td>
+                    <td class="text-muted">${p.weight}g</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-secondary px-2" onclick="stepBulkQty(${p.id}, -1)">-</button>
+                            <input type="number" class="form-control form-control-sm qty-input-stepper mx-1" id="bulk_qty_${p.id}" value="0" min="0" max="${p.stock}" oninput="calcBulkTotals()">
+                            <button class="btn btn-sm btn-outline-secondary px-2" onclick="stepBulkQty(${p.id}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td><strong class="text-primary" id="bulk_line_${p.id}">$0.00</strong></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function stepBulkQty(id, delta) {
+            const input = document.getElementById(`bulk_qty_${id}`);
+            let val = parseInt(input.value || 0) + delta;
+            if (val < 0) val = 0;
+            input.value = val;
+            calcBulkTotals();
+        }
+
+        function calcBulkTotals() {
+            const products = getProducts();
+            let totalUnits = 0;
+            let grandTotal = 0;
+
+            products.forEach(p => {
+                const input = document.getElementById(`bulk_qty_${p.id}`);
+                const qty = parseInt(input ? input.value : 0) || 0;
+                const lineTotal = qty * p.price;
+                const lineEl = document.getElementById(`bulk_line_${p.id}`);
+                if (lineEl) lineEl.innerText = `$${lineTotal.toFixed(2)}`;
+
+                totalUnits += qty;
+                grandTotal += lineTotal;
+            });
+
+            document.getElementById('bulkTotalUnits').innerText = totalUnits;
+            document.getElementById('bulkGrandTotal').innerText = grandTotal.toFixed(2);
+        }
+
+        function submitBulkOrder() {
+            const products = getProducts();
+            let addedCount = 0;
+
+            products.forEach(p => {
+                const input = document.getElementById(`bulk_qty_${p.id}`);
+                const qty = parseInt(input ? input.value : 0) || 0;
+                if (qty > 0) {
+                    addToCart(p.id, qty);
+                    addedCount += qty;
+                    input.value = 0;
+                }
+            });
+
+            if (addedCount > 0) {
+                calcBulkTotals();
+                window.location.href = 'cart.html';
+            } else {
+                alert('Please enter a quantity for at least one item before adding to cart.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderBulkMatrix);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

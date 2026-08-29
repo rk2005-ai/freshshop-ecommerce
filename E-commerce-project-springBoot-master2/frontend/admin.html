@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Admin Executive Dashboard - Perishable Shop</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .stat-card {
+            border-radius: var(--radius-md);
+            padding: 22px;
+            color: #fff;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 20px;
+        }
+        .stat-card.bg-grad-1 { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-card.bg-grad-2 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .stat-card.bg-grad-3 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .stat-card.bg-grad-4 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand font-weight-bold" href="admin.html">
+                <i class="fas fa-shield-alt text-warning mr-2"></i>Perishable Shop Admin Portal
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><a class="nav-link font-weight-bold" href="admin.html"><i class="fas fa-chart-line mr-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="orders.html"><i class="fas fa-shopping-bag mr-1"></i> Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html"><i class="fas fa-boxes mr-1"></i> Products</a></li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item mr-2"><button class="btn theme-btn" onclick="toggleTheme()"><i class="theme-toggle-icon fas fa-moon"></i></button></li>
+                    <li class="nav-item"><a class="btn btn-outline-light btn-sm" href="index.html"><i class="fas fa-store mr-1"></i> View Store</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid my-4 px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="font-weight-bold mb-1"><i class="fas fa-chart-line text-primary mr-2"></i>Executive Analytics Dashboard</h2>
+                <p class="text-muted mb-0">Real-time revenue metrics, order fulfillment analytics, and produce inventory status</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-success font-weight-bold mr-2" onclick="exportSampleCsv('orders')">
+                    <i class="fas fa-file-csv mr-1"></i> Export Orders CSV
+                </button>
+                <button class="btn btn-outline-primary font-weight-bold" onclick="exportSampleCsv('products')">
+                    <i class="fas fa-file-csv mr-1"></i> Export Products CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- 4 KPI Stat Cards -->
+        <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card bg-grad-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-white-50 text-uppercase small font-weight-bold">Gross Revenue</span>
+                            <h2 class="font-weight-bold mb-0 mt-1">$4,820.00</h2>
+                        </div>
+                        <i class="fas fa-dollar-sign fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card bg-grad-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-white-50 text-uppercase small font-weight-bold">Total Orders</span>
+                            <h2 class="font-weight-bold mb-0 mt-1">124</h2>
+                        </div>
+                        <i class="fas fa-shopping-bag fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card bg-grad-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-white-50 text-uppercase small font-weight-bold">Active Produce Items</span>
+                            <h2 class="font-weight-bold mb-0 mt-1">8</h2>
+                        </div>
+                        <i class="fas fa-carrot fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card bg-grad-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-white-50 text-uppercase small font-weight-bold">Active Customers</span>
+                            <h2 class="font-weight-bold mb-0 mt-1">89</h2>
+                        </div>
+                        <i class="fas fa-users fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3 Interactive Visual Charts -->
+        <div class="row mt-2">
+            <!-- Line Chart: Weekly Revenue -->
+            <div class="col-lg-8 mb-4">
+                <div class="card p-4 shadow-sm h-100" style="background: var(--bg-card); border-color: var(--border-color);">
+                    <h5 class="font-weight-bold mb-3"><i class="fas fa-chart-area text-primary mr-2"></i>Weekly Revenue Growth Trend</h5>
+                    <canvas id="revenueLineChart" height="120"></canvas>
+                </div>
+            </div>
+
+            <!-- Donut Chart: Order Status Breakdown -->
+            <div class="col-lg-4 mb-4">
+                <div class="card p-4 shadow-sm h-100" style="background: var(--bg-card); border-color: var(--border-color);">
+                    <h5 class="font-weight-bold mb-3"><i class="fas fa-chart-pie text-warning mr-2"></i>Order Fulfillment Status</h5>
+                    <canvas id="statusDonutChart" height="180"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar Chart: Inventory Stock Matrix -->
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card p-4 shadow-sm" style="background: var(--bg-card); border-color: var(--border-color);">
+                    <h5 class="font-weight-bold mb-3"><i class="fas fa-boxes text-success mr-2"></i>Real-Time Produce Inventory Levels</h5>
+                    <canvas id="stockBarChart" height="70"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Revenue Line Chart
+            new Chart(document.getElementById('revenueLineChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: [420, 680, 510, 890, 1120, 1450, 1680],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.12)',
+                        fill: true,
+                        tension: 0.35,
+                        borderWidth: 3
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
+
+            // 2. Order Status Donut Chart
+            new Chart(document.getElementById('statusDonutChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Delivered', 'Processing', 'Shipped', 'Placed'],
+                    datasets: [{
+                        data: [65, 25, 20, 14],
+                        backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b']
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // 3. Stock Bar Chart
+            const products = getProducts();
+            new Chart(document.getElementById('stockBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: products.map(p => p.name.split(' ').slice(0, 2).join(' ')),
+                    datasets: [{
+                        label: 'Units in Stock',
+                        data: products.map(p => p.stock),
+                        backgroundColor: '#10b981',
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true }
+            });
+        });
+
+        function exportSampleCsv(type) {
+            let csv = '';
+            if (type === 'orders') {
+                csv = "Order ID,Customer,Date,Total,Status,Delivery Slot,Mode\n101,Lisa Simpson,2026-08-29,11.00,DELIVERED,Morning (8:00 AM - 11:00 AM),DOORSTEP\n102,John Doe,2026-08-29,24.00,PROCESSING,Evening (6:00 PM - 9:00 PM),STORE_PICKUP\n";
+            } else {
+                csv = "ID,Name,Category,Price,Stock,Weight\n1,Farm Fresh Red Apples,Fruits,4,45,500g\n2,Organic Golden Bananas,Fruits,3,38,1000g\n3,Crunchy Farm Carrots,Vegetables,2,60,500g\n4,Fresh Pasteurized Milk,Dairy,3,25,1000g\n";
+            }
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `${type}_report.csv`);
+            a.click();
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

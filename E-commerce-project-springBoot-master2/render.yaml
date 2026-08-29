@@ -1,0 +1,33 @@
+services:
+  # Spring Boot Web Application
+  - type: web
+    name: freshshop-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8081
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: freshshop-mysql
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: freshshop-mysql
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: freshshop-mysql
+          property: password
+
+databases:
+  # Managed MySQL Database
+  - name: freshshop-mysql
+    databaseName: ecommjava
+    user: shopuser
+    plan: free
+    region: oregon
